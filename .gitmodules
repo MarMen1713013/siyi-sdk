@@ -1,0 +1,3 @@
+[submodule "include/crc"]
+	path = include/crc
+	url = https://github.com/MarMen1713013/crc.git
