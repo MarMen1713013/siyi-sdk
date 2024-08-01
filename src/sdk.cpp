@@ -251,11 +251,11 @@ void SIYI_SDK::parse_gimbal_attitude_msg() {
 
         auto tmp = (int16_t*)(msg.get_data());
 
-        gimbal_att_msg.yaw   = float(tmp[0]) / 10.0f;
+        gimbal_att_msg.yaw   = -float(tmp[0]) / 10.0f;
         gimbal_att_msg.pitch = float(tmp[1]) / 10.0f;
         gimbal_att_msg.roll  = float(tmp[2]) / 10.0f;
 
-        gimbal_att_msg.yaw_speed   = float(tmp[3]) / 10.0f;
+        gimbal_att_msg.yaw_speed   = -float(tmp[3]) / 10.0f;
         gimbal_att_msg.pitch_speed = float(tmp[4]) / 10.0f;
         gimbal_att_msg.roll_speed  = float(tmp[5]) / 10.0f;
     } else print_size_err(msg.get_cmd_id());
@@ -267,7 +267,7 @@ void SIYI_SDK::parse_gimbal_angles_msg() {
 
         auto tmp = (int16_t*)(msg.get_data());
 
-        gimbal_angles_msg.yaw   = float(tmp[0]) / 10.0f;
+        gimbal_angles_msg.yaw   = -float(tmp[0]) / 10.0f;
         gimbal_angles_msg.pitch = float(tmp[1]) / 10.0f;
         gimbal_angles_msg.roll  = float(tmp[2]) / 10.0f;
     } else print_size_err(msg.get_cmd_id());
