@@ -10,6 +10,7 @@ class SIYI_SDK {
 public:
     SIYI_SDK() = default;
     virtual ~SIYI_SDK();
+    void print_message() const;
 
     struct FirmwareVersionMsg {
         int seq = 0;

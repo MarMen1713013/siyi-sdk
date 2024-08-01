@@ -6,6 +6,13 @@
 #include <thread>
 
 SIYI_SDK::~SIYI_SDK() {}
+void SIYI_SDK::print_message() const {
+    int len = msg.get_send_data_len();
+    for(int i = 0; i < len; ++i) {
+        printf("%.2X ", m_msg_buffer[i]);
+    }
+    printf("\n");
+}
 
 /////////////////////////////////
 //  REQUEST AND SET FUNCTIONS  //
