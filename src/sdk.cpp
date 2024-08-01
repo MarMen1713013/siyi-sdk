@@ -6,6 +6,13 @@
 #include <thread>
 
 SIYI_SDK::~SIYI_SDK() {}
+void SIYI_SDK::print_message() const {
+    int len = msg.get_send_data_len();
+    for(int i = 0; i < len; ++i) {
+        printf("%.2X ", m_msg_buffer[i]);
+    }
+    printf("\n");
+}
 
 /////////////////////////////////
 //  REQUEST AND SET FUNCTIONS  //
@@ -220,7 +227,7 @@ void SIYI_SDK::parse_gimbal_center_msg() {
 }
 
 void SIYI_SDK::parse_gimbal_info_msg() {
-    if(msg.get_data_len() >= 7) {
+    if(msg.get_data_len() >= 6) { //Different from documentation. It should be 7 bytes long
         recording_state_msg.seq = msg.get_seq();
         mounting_direction_msg.seq = msg.get_seq();
         motion_mode_msg.seq = msg.get_seq();
@@ -244,11 +251,11 @@ void SIYI_SDK::parse_gimbal_attitude_msg() {
 
         auto tmp = (int16_t*)(msg.get_data());
 
-        gimbal_att_msg.yaw   = float(tmp[0]) / 10.0f;
+        gimbal_att_msg.yaw   = -float(tmp[0]) / 10.0f;
         gimbal_att_msg.pitch = float(tmp[1]) / 10.0f;
         gimbal_att_msg.roll  = float(tmp[2]) / 10.0f;
 
-        gimbal_att_msg.yaw_speed   = float(tmp[3]) / 10.0f;
+        gimbal_att_msg.yaw_speed   = -float(tmp[3]) / 10.0f;
         gimbal_att_msg.pitch_speed = float(tmp[4]) / 10.0f;
         gimbal_att_msg.roll_speed  = float(tmp[5]) / 10.0f;
     } else print_size_err(msg.get_cmd_id());
@@ -260,7 +267,7 @@ void SIYI_SDK::parse_gimbal_angles_msg() {
 
         auto tmp = (int16_t*)(msg.get_data());
 
-        gimbal_angles_msg.yaw   = float(tmp[0]) / 10.0f;
+        gimbal_angles_msg.yaw   = -float(tmp[0]) / 10.0f;
         gimbal_angles_msg.pitch = float(tmp[1]) / 10.0f;
         gimbal_angles_msg.roll  = float(tmp[2]) / 10.0f;
     } else print_size_err(msg.get_cmd_id());
@@ -372,7 +379,7 @@ void SIYIUnixCamera::receive_message_loop(bool &connected) {
         if(bytes < 0) {
         } else {
             // Go through the buffer
-            if( memcmp(&HEADER,buff,2) ) {
+            if( memcmp(&HEADER,buff,2) || bytes < MINIMUM_DATA_LENGTH ) {
                 continue;
             }
             msg.decode_msg(buff);
