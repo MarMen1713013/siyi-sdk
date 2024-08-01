@@ -227,7 +227,7 @@ void SIYI_SDK::parse_gimbal_center_msg() {
 }
 
 void SIYI_SDK::parse_gimbal_info_msg() {
-    if(msg.get_data_len() >= 7) {
+    if(msg.get_data_len() >= 6) { //Different from documentation. It should be 7 bytes long
         recording_state_msg.seq = msg.get_seq();
         mounting_direction_msg.seq = msg.get_seq();
         motion_mode_msg.seq = msg.get_seq();
@@ -379,7 +379,7 @@ void SIYIUnixCamera::receive_message_loop(bool &connected) {
         if(bytes < 0) {
         } else {
             // Go through the buffer
-            if( memcmp(&HEADER,buff,2) ) {
+            if( memcmp(&HEADER,buff,2) || bytes < MINIMUM_DATA_LENGTH ) {
                 continue;
             }
             msg.decode_msg(buff);

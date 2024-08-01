@@ -22,13 +22,7 @@ void SIYI_Message::increment_seq(int val) const {
 }
 
 void SIYI_Message::decode_msg(const uint8_t *msg) {
-    uint16_t len;
-    memcpy(&len,msg+3,sizeof(uint16_t));
-    if(len < MINIMUM_DATA_LENGTH) {
-        std::cout << "Warning, message length is not enough to be parsed" << std::endl;
-        return;
-    }
-    m_data_len = len;
+    memcpy(&m_data_len,msg+3,sizeof(uint16_t));
 
     uint16_t crc_xmodem = crc_red((uint8_t*)msg,m_data_len+8); //last 2 bytes are crc
     uint16_t crc_received;
