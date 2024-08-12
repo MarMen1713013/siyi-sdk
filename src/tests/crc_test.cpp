@@ -1,12 +1,31 @@
 #include <siyi-sdk.h>
 #include <iostream>
 
-class TestSDK : public SIYI_SDK {
+using namespace SIYI;
+
+class TestSDK : public SIYI_Gimbal {
 public:
-    virtual ~TestSDK() {
+    TestSDK() {
         msg.force_seq(-1);
     }
+    virtual ~TestSDK() { }
 private:
+    virtual bool send_message(const uint8_t *message, const int length) const override {
+        msg.force_seq(-1);
+        for(int i = 0; i < length; ++i) {
+            printf("%.2X ",message[i]);
+        }
+        printf("\n");
+        return true;
+    }
+};
+
+class TestAI : public SIYI_AI {
+public:
+    TestAI() {
+        msg.force_seq(-1);
+    }
+    virtual ~TestAI() { }
     virtual bool send_message(const uint8_t *message, const int length) const override {
         msg.force_seq(-1);
         for(int i = 0; i < length; ++i) {
@@ -19,7 +38,11 @@ private:
 
 int main( int argc, char *argv[] ) {
     TestSDK test;
+    auto tracker = new TestAI;
 
+    std::cout << "////////////////" << std::endl;
+    std::cout << "//   GIMBAL   //" << std::endl;
+    std::cout << "////////////////\n" << std::endl;
     std::cout << "Zoom 1:" << std::endl;
     auto fuffa = test.request_zoom_in();
     std::cout << std::endl;
@@ -63,5 +86,30 @@ int main( int argc, char *argv[] ) {
     std::cout << "Send Control Angle (-90,0):" << std::endl;
     fuffa = test.set_gimbal_angles(-90.0f,0.0f);
     std::cout << std::endl;
+
+    std::cout << "////////////////////" << std::endl;
+    std::cout << "//   AI_TRACKER   //" << std::endl;
+    std::cout << "////////////////////\n" << std::endl;
+
+    std::cout << "heartbeat:" << std::endl;
+    tracker->send_heartbeat();
+    std::cout << std::endl;
+
+    std::cout << "tracker mode toggle:" << std::endl;
+    tracker->request_ai_tracking_switch();
+    std::cout << std::endl;
+
+    std::cout << "set tracker mode true:" << std::endl;
+    tracker->set_ai_tracking_mode(true);
+    std::cout << std::endl;
+
+    std::cout << "set tracker mode false:" << std::endl;
+    tracker->set_ai_tracking_mode(false);
+    std::cout << std::endl;
+
+    std::cout << "set target:" << std::endl;
+    tracker->set_ai_tracking_target(SIYI_AI::AiTracking{.ai_tracking = true, .x_req = 1000, .y_req = 50});
+    std::cout << std::endl;
+    delete tracker;
     return 0;
 }

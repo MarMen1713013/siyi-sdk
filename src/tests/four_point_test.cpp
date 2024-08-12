@@ -5,6 +5,8 @@
 #include <functional>
 #include <atomic>
 
+using namespace SIYI;
+
 std::function<void(int)> sigout;
 void sigout_wr( int signum ) {
     sigout(signum);
@@ -14,7 +16,7 @@ void sigout_wr( int signum ) {
 
 int main(int argc, char *argv[] ) {
     std::cout << "Hello, world!" << std::endl;
-    auto camera = new SIYIUnixCamera("192.168.144.25",37260);
+    auto camera = new SIYIUnix_Gimbal("192.168.144.25",37260);
     std::atomic<bool> flag;
     flag = true;
 
