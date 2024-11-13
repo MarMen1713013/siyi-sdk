@@ -422,5 +422,114 @@ namespace SIYI {
             m_tracking_state
         );
     }
+
+    /////////////////////////////////
+    //  REQUEST AND SET FUNCTIONS  //
+    /////////////////////////////////
+    bool SIYI_Remote::request_system_settings() {
+        msg.mk32cu_acquire_system_settings(m_msg_buffer);
+        int len = msg.get_send_data_len();
+        return send_message(m_msg_buffer, len);
+    }
+    
+    bool SIYI_Remote::request_data_channel(SIYI_Remote::RcChannelOutFreq freq) {
+        msg.mk32cu_acquire_control_channel(m_msg_buffer, (uint8_t)freq);
+        int len = msg.get_send_data_len();
+        return send_message(m_msg_buffer, len);
+    }
+
+    bool SIYI_Remote::request_rc_link_status() {
+        msg.mk32cu_acquire_rc_link_status(m_msg_buffer);
+        int len = msg.get_send_data_len();
+        return send_message(m_msg_buffer, len);
+    }
+
+    bool SIYI_Remote::request_fpv_link_status() {
+        msg.mk32cu_acquire_fpv_link_status(m_msg_buffer);
+        int len = msg.get_send_data_len();
+        return send_message(m_msg_buffer, len);
+    }
+    
+    bool SIYI_Remote::set_system_settings(const SIYI_Remote::SystemSettings *sys_settings_ptr) {
+        msg.mk32cu_system_settings(m_msg_buffer, (uint8_t)(sys_settings_ptr->match), (uint8_t)(sys_settings_ptr->baud), (uint8_t)(sys_settings_ptr->joy)); 
+        int len = msg.get_send_data_len();
+        return send_message(m_msg_buffer, len);
+    }
+    
+    ///////////////////////
+    //  PARSE FUNCTIONS  //
+    ///////////////////////
+    void SIYI_Remote::parse_hardware_id() {
+        if(msg.get_data_len() >= 1) {
+            m_hardware_id_msg.seq = msg.get_seq();
+            m_hardware_id_msg.id = msg.get_data()[0];
+        } else print_size_err(msg.get_cmd_id());
+    }
+
+    void SIYI_Remote::parse_req_system_settings() {
+        if(msg.get_data_len() >= 4) {
+            m_system_settings.match = (enum SystemSettings::match_e)(msg.get_data()[0]);
+            m_system_settings.baud = (enum SystemSettings::baud_e)(msg.get_data()[1]);
+            m_system_settings.joy = (enum SystemSettings::joy_e)(msg.get_data()[2]);
+            m_system_settings.v_bat = msg.get_data()[3] * 10.0;
+        } else print_size_err(msg.get_cmd_id());
+    }
+
+    void SIYI_Remote::parse_set_system_settings() {
+        if(msg.get_data_len() >= 1) {
+            if((int8_t)(msg.get_data()[0]) < 0) std::cerr << "Error received from device" << std::endl;
+        } else print_size_err(msg.get_cmd_id());
+    }
+
+    void SIYI_Remote::parse_data_channel() {
+        if(msg.get_data_len() >= 32) {
+            memcpy(m_channels.data(), msg.get_data(), 32); //TODO: tests
+        } else print_size_err(msg.get_cmd_id());
+    }
+
+    void SIYI_Remote::parse_rc_link_status() {
+        if(msg.get_data_len() >= 15) {
+            memcpy(&(m_rc_link_status.freq), msg.get_data(), sizeof(uint16_t));
+            m_rc_link_status.pack_loss_rate = msg.get_data()[2];
+            memcpy(&(m_rc_link_status.real_pack), msg.get_data() + 3, sizeof(uint16_t));
+            memcpy(&(m_rc_link_status.real_pack_rate), msg.get_data() + 5, sizeof(uint16_t));
+            memcpy(&(m_rc_link_status.data_up), msg.get_data() + 7, sizeof(uint32_t));
+            memcpy(&(m_rc_link_status.data_down), msg.get_data() + 11, sizeof(uint32_t));
+        } else print_size_err(msg.get_cmd_id());
+    }
+
+    void SIYI_Remote::parse_fpv_link_status() {
+        if(msg.get_data_len() >= 36) {
+            int8_t next_field = 4;
+            memcpy(&(m_fpv_link_status.signal), msg.get_data(), sizeof(int32_t));
+            memcpy(&(m_fpv_link_status.inactive_time), msg.get_data() + 1 * next_field, sizeof(int32_t));
+            memcpy(&(m_fpv_link_status.up_stream), msg.get_data() + 2 * next_field, sizeof(int32_t));
+            memcpy(&(m_fpv_link_status.down_stream), msg.get_data() + 3 * next_field, sizeof(int32_t));
+            memcpy(&(m_fpv_link_status.tx_bandwidth), msg.get_data() + 4 * next_field, sizeof(int32_t));
+            memcpy(&(m_fpv_link_status.rx_bandwidth), msg.get_data() + 5 * next_field, sizeof(int32_t));
+            memcpy(&(m_fpv_link_status.rssi), msg.get_data() + 6 * next_field, sizeof(int32_t));
+            memcpy(&(m_fpv_link_status.freq), msg.get_data() + 7 * next_field, sizeof(int32_t));
+            memcpy(&(m_fpv_link_status.channel), msg.get_data() + 8 * next_field, sizeof(int32_t));
+        } else print_size_err(msg.get_cmd_id());
+    }
+    
+    /////////////////////
+    //  GET FUNCTIONS  //
+    /////////////////////
+    SIYI_Remote::SystemSettings SIYI_Remote::get_system_settings() const {
+        return m_system_settings;
+    }
+
+    SIYI_Remote::rc_channels SIYI_Remote::get_channels() const {
+        return m_channels;
+    }
+
+    SIYI_Remote::RcLinkStatus SIYI_Remote::get_rc_link_status() const {
+        return m_rc_link_status;
+    }
+
+    SIYI_Remote::FPVLinkStatus SIYI_Remote::get_fpv_link_status() const {
+        return m_fpv_link_status;
+    }
 } //namespace SIYI
 

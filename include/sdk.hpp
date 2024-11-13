@@ -3,6 +3,7 @@
 #include "message.hpp"
 #include <tuple>
 #include <unistd.h>
+#include <array>
 
 namespace SIYI {
     class SIYI_SDK {
@@ -282,6 +283,116 @@ namespace SIYI {
         AiTracking m_tracking;
         AiTrackingState m_tracking_state;
         FirmwareVersionMsg m_firmware_version_msg;
+    };
+
+    class SIYI_Remote : public SIYI_SDK {
+    public:
+        /////////////////
+        //    TYPES    //
+        /////////////////
+        struct HardwareIDMsg {
+            int seq = 0;
+            uint8_t id;
+        };
+
+        struct SystemSettings {
+            enum match_e {
+                START = 0,
+                BINDING1 = 1,
+                BINDING2 = 2,
+                FINISHED = 3
+            } match;
+
+            enum baud_e {
+                BAUD_4800 = 0,
+                BAUD_9600 = 1,
+                BAUD_38400 = 2,
+                BAUD_57600 = 3,
+                BAUD_76800 = 4,
+                BAUD_115200 = 5,
+                BAUD_230400 = 6
+            } baud;
+
+            enum joy_e {
+                MODE_1 = 0,
+                MODE_2 = 1,
+                MODE_3 = 2,
+                CUSTOM = 3
+            } joy;
+
+            float v_bat;
+        };
+
+        enum RcChannelOutFreq {
+            OFF = 0,
+            FREQ_2_HZ,
+            FREQ_4_HZ,
+            FREQ_5_HZ,
+            FREQ_10_HZ,
+            FREQ_20_HZ,
+            FREQ_50_HZ,
+            FREQ_100_HZ
+        };
+
+        struct RcLinkStatus {
+            uint16_t freq;
+            uint8_t pack_loss_rate;
+            uint16_t real_pack;
+            uint16_t real_pack_rate;
+            uint32_t data_up; //upload byte/s
+            uint32_t data_down; //download byte/s
+        };
+
+        struct FPVLinkStatus {
+            int32_t signal; // %
+            int32_t inactive_time;
+            int32_t up_stream; // byte/s
+            int32_t down_stream; // byte/s
+            int32_t tx_bandwidth; // upload bandwidth = tx_bandwith/1000 Mbps
+            int32_t rx_bandwidth; // download bandwidth = rx_bandwith/1000 Mbps
+            int32_t rssi; // dBm
+            int32_t freq; // MHz
+            int32_t channel;
+        };
+
+        using rc_channels = std::array<int16_t,16>;
+        /////////////////////////////////
+        //  REQUEST AND SET FUNCTIONS  //
+        /////////////////////////////////
+        bool request_hardware_id();
+        bool request_system_settings();
+        bool request_data_channel(RcChannelOutFreq);
+        bool request_rc_link_status();
+        bool request_fpv_link_status();
+
+        bool set_system_settings(const SystemSettings *sys_settings_ptr);
+
+        ///////////////////////
+        //  PARSE FUNCTIONS  //
+        ///////////////////////
+        void parse_hardware_id();
+        void parse_req_system_settings();
+        void parse_set_system_settings();
+        void parse_data_channel();
+        void parse_rc_link_status();
+        void parse_fpv_link_status();
+
+        /////////////////////
+        //  GET FUNCTIONS  //
+        /////////////////////
+        SystemSettings get_system_settings() const;
+        rc_channels get_channels() const;
+        RcLinkStatus get_rc_link_status() const;
+        FPVLinkStatus get_fpv_link_status() const;
+
+    protected:
+        HardwareIDMsg m_hardware_id_msg;
+        SystemSettings m_system_settings;
+        RcChannelOutFreq m_rc_channel_out_freq;
+        RcLinkStatus m_rc_link_status;
+        FPVLinkStatus m_fpv_link_status;
+
+        rc_channels m_channels;
     };
 } //namespace SIYI
 
