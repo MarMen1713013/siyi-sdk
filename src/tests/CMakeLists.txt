@@ -13,3 +13,6 @@ target_link_libraries(tracker_test PUBLIC siyi-sdk)
 
 add_executable(gimbal_control gimbal_control.cpp)
 target_link_libraries(gimbal_control PUBLIC siyi-sdk)
+
+add_executable(remote_joy remote_joy.cpp)
+target_link_libraries(remote_joy PUBLIC siyi-sdk)

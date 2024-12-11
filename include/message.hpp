@@ -37,6 +37,7 @@
 /**
  * MK32 control unit
  */
+#define MK32CU_HARDWARE_ID 0x40
 #define MK32CU_ACQUIRE_SYSTEM_SETTINGS 0x16
 #define MK32CU_SYSTEM_SETTINGS 0x17
 #define MK32CU_ACQUIRE_REMOTE_CONTROL_CHANNELS 0x42
@@ -117,6 +118,8 @@ namespace SIYI {
         const uint8_t *const ai_request_ai_tracking_status(uint8_t *const) const;
     
         const uint8_t *const ai_set_ai_tracking_target_by_coord(uint8_t *const, bool, uint16_t, uint16_t) const;
+
+        const uint8_t *const mk32cu_hardware_id_msg(uint8_t *const) const;
 
         const uint8_t *const mk32cu_acquire_system_settings(uint8_t *const) const;
 

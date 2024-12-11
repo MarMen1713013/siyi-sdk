@@ -11,6 +11,7 @@ namespace SIYI {
             std::cout << "Error, failed create socket" << std::endl;
             throw std::runtime_error("Failed to create socket");
         }
+        memset(this->m_channels.data(),0,sizeof(rc_channels));
     
         // Set up the server address
         server_addr_.sin_family = AF_INET;

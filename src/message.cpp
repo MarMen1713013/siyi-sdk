@@ -255,6 +255,10 @@ namespace SIYI {
         encode_msg(msg,AI_SET_AI_TRACKING_TARGET_BY_COORD,data,5);
         return msg;
     }
+    const uint8_t *const SIYI_Message::mk32cu_hardware_id_msg(uint8_t *const msg) const {
+        encode_msg(msg,MK32CU_HARDWARE_ID,nullptr,0);
+        return msg;
+    }
     const uint8_t *const SIYI_Message::mk32cu_acquire_system_settings(uint8_t *const msg) const {
         encode_msg(msg,MK32CU_ACQUIRE_SYSTEM_SETTINGS,nullptr,0);
         return msg;

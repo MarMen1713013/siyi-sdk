@@ -17,6 +17,7 @@ add_library(
     src/sdk.cpp
     src/gimbal.cpp
     src/ai.cpp
+    src/remote.cpp
 )
 target_link_libraries(siyi-sdk PUBLIC gencrc)
 target_include_directories(siyi-sdk PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)

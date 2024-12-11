@@ -426,6 +426,11 @@ namespace SIYI {
     /////////////////////////////////
     //  REQUEST AND SET FUNCTIONS  //
     /////////////////////////////////
+    bool SIYI_Remote::request_hardware_id() {
+        msg.mk32cu_hardware_id_msg(m_msg_buffer);
+        int len = msg.get_send_data_len();
+        return send_message(m_msg_buffer, len);
+    }
     bool SIYI_Remote::request_system_settings() {
         msg.mk32cu_acquire_system_settings(m_msg_buffer);
         int len = msg.get_send_data_len();
