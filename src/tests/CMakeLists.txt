@@ -10,3 +10,6 @@ target_link_libraries(four_point_test PUBLIC siyi-sdk)
 
 add_executable(tracker_test tracker_test.cpp)
 target_link_libraries(tracker_test PUBLIC siyi-sdk)
+
+add_executable(gimbal_control gimbal_control.cpp)
+target_link_libraries(gimbal_control PUBLIC siyi-sdk)
