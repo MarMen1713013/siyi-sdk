@@ -220,8 +220,8 @@ namespace SIYI {
     const uint8_t *const SIYI_Message::gimbal_angles_msg(uint8_t *const msg, float yaw, float pitch) const {
         // Check if yaw angle exceeded limit and convert it to hex string
         int16_t data[2];
-        data[0] = yaw > 135 ? 1350 : yaw < -135 ? -1350 : yaw * 10;
-        data[1] = pitch > 25 ? 250 : pitch < -90 ? -900 : pitch * 10;
+        data[0] = yaw * 10;
+        data[1] = pitch * 10;
         encode_msg(msg,GIMB_CONTROL_ANGLE,(uint8_t*)data,sizeof(data));
         return msg;
     }
