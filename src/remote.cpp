@@ -61,6 +61,7 @@ namespace SIYI {
                     uint8_t cmd_id = msg.get_cmd_id();
                     // Message parsing distribution in frequent use respective order
                     if (cmd_id == MK32CU_ACQUIRE_SYSTEM_SETTINGS) SIYI_Remote::parse_req_system_settings();
+                    else if (cmd_id == MK32CU_HARDWARE_ID) SIYI_Remote::parse_hardware_id();
                     else if (cmd_id == MK32CU_SYSTEM_SETTINGS) SIYI_Remote::parse_set_system_settings();
                     else if (cmd_id == MK32CU_ACQUIRE_REMOTE_CONTROL_CHANNELS) SIYI_Remote::parse_data_channel();
                     else if (cmd_id == MK32CU_ACQUIRE_RC_LINK_STATUS) SIYI_Remote::parse_rc_link_status();

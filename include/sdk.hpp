@@ -292,7 +292,7 @@ namespace SIYI {
         /////////////////
         struct HardwareIDMsg {
             int seq = 0;
-            uint8_t id;
+            uint8_t id[13];
         };
 
         struct SystemSettings {
@@ -324,7 +324,7 @@ namespace SIYI {
         };
 
         enum RcChannelOutFreq {
-            OFF = 0,
+            FREQ_OFF = 0,
             FREQ_2_HZ,
             FREQ_4_HZ,
             FREQ_5_HZ,
@@ -380,6 +380,7 @@ namespace SIYI {
         /////////////////////
         //  GET FUNCTIONS  //
         /////////////////////
+        HardwareIDMsg get_hardware_id() const;
         SystemSettings get_system_settings() const;
         rc_channels get_channels() const;
         RcLinkStatus get_rc_link_status() const;

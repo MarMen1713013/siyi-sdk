@@ -465,9 +465,10 @@ namespace SIYI {
     //  PARSE FUNCTIONS  //
     ///////////////////////
     void SIYI_Remote::parse_hardware_id() {
-        if(msg.get_data_len() >= 1) {
+        if(msg.get_data_len() >= 12) {
             m_hardware_id_msg.seq = msg.get_seq();
-            m_hardware_id_msg.id = msg.get_data()[0];
+            memcpy(m_hardware_id_msg.id,msg.get_data(),12);
+            m_hardware_id_msg.id[12] = '\0';
         } else print_size_err(msg.get_cmd_id());
     }
 
@@ -476,7 +477,7 @@ namespace SIYI {
             m_system_settings.match = (enum SystemSettings::match_e)(msg.get_data()[0]);
             m_system_settings.baud = (enum SystemSettings::baud_e)(msg.get_data()[1]);
             m_system_settings.joy = (enum SystemSettings::joy_e)(msg.get_data()[2]);
-            m_system_settings.v_bat = msg.get_data()[3] * 10.0;
+            m_system_settings.v_bat = (float)(msg.get_data()[3]) / 10.0;
         } else print_size_err(msg.get_cmd_id());
     }
 
@@ -521,6 +522,9 @@ namespace SIYI {
     /////////////////////
     //  GET FUNCTIONS  //
     /////////////////////
+    SIYI_Remote::HardwareIDMsg SIYI_Remote::get_hardware_id() const {
+        return m_hardware_id_msg;
+    }
     SIYI_Remote::SystemSettings SIYI_Remote::get_system_settings() const {
         return m_system_settings;
     }
