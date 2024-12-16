@@ -7,18 +7,28 @@
 using namespace SIYI;
 
 int main( int argc, char *argv[] ) {
-    SIYI::SIYIUnix_Remote remote("192.168.144.20",19856);
+    SIYI::SIYIUnix_Remote remote("192.168.144.12",19856);
     remote.request_hardware_id();
     std::this_thread::sleep_for(std::chrono::seconds(1));
-    remote.request_data_channel(SIYI_Remote::FREQ_10_HZ);
-    for(int i = 0; i < 40; ++i) {
+    while(1) {
         auto chs = remote.get_channels();
-        printf("Channels:\n");
+        auto hd_id = remote.get_hardware_id();
+        printf("\x1B[0KChannels:\n");
+        printf("\x1B[0KDevice ID: %s\n",hd_id.id);
         for(int j = 0; j < 16; ++j) {
-            printf("\tch[%d]: %d\n", j, chs[j]);
+            printf("\x1B[0K\tch[%d]: %d\n", j, chs[j]);
         }
-        printf("\n");
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        std::this_thread::sleep_for(std::chrono::milliseconds(500));
+        remote.request_system_settings();
+        auto set = remote.get_system_settings();
+        printf("\x1B[0KBAUD: %d, JOY: %d, MATCH: %d, BAT: %f\n",set.baud,set.joy,set.match,set.v_bat);
+        remote.request_rc_link_status();
+        auto rc_link = remote.get_rc_link_status();
+        printf("\x1B[0KUP:%d,DN:%d, freq: %d\n",rc_link.data_up,rc_link.data_down,rc_link.freq);
+        remote.request_fpv_link_status();
+        remote.request_hardware_id();
+        remote.request_data_channel(SIYI_Remote::FREQ_2_HZ);
+        printf("\x1B[20F");
     }
     return 0;
 }
