@@ -34,6 +34,16 @@
 #define AI_REQUEST_AI_TRACKING_STATUS 0x05
 #define AI_SET_AI_TRACKING_TARGET_BY_COORD 0x06
 
+/**
+ * MK32 control unit
+ */
+#define MK32CU_HARDWARE_ID 0x40
+#define MK32CU_ACQUIRE_SYSTEM_SETTINGS 0x16
+#define MK32CU_SYSTEM_SETTINGS 0x17
+#define MK32CU_ACQUIRE_REMOTE_CONTROL_CHANNELS 0x42
+#define MK32CU_ACQUIRE_RC_LINK_STATUS 0x43
+#define MK32CU_ACQUIRE_FPV_LINK_STATUS 0x44
+
 #define crc_red(x,y) crc16_T(SIYI_Message::s_table,x,y,0x0000,false,false,0x0000)
 #define gen_tab(x) gen_lookup16(x,0x1021,false)
 
@@ -108,7 +118,19 @@ namespace SIYI {
         const uint8_t *const ai_request_ai_tracking_status(uint8_t *const) const;
     
         const uint8_t *const ai_set_ai_tracking_target_by_coord(uint8_t *const, bool, uint16_t, uint16_t) const;
-    
+
+        const uint8_t *const mk32cu_hardware_id_msg(uint8_t *const) const;
+
+        const uint8_t *const mk32cu_acquire_system_settings(uint8_t *const) const;
+
+        const uint8_t *const mk32cu_system_settings(uint8_t *const, uint8_t match, uint8_t baud_type, uint8_t joy_type) const;
+
+        const uint8_t *const mk32cu_acquire_control_channel(uint8_t *const, uint8_t out_freq) const;
+
+        const uint8_t *const mk32cu_acquire_rc_link_status(uint8_t *const) const;
+
+        const uint8_t *const mk32cu_acquire_fpv_link_status(uint8_t *const) const;
+
     private:
         void encode_msg(uint8_t *const msg, const uint8_t cmd_id, const uint8_t *data, const uint16_t data_len) const;
         void increment_seq(int val) const;

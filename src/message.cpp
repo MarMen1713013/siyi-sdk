@@ -255,5 +255,38 @@ namespace SIYI {
         encode_msg(msg,AI_SET_AI_TRACKING_TARGET_BY_COORD,data,5);
         return msg;
     }
+    const uint8_t *const SIYI_Message::mk32cu_hardware_id_msg(uint8_t *const msg) const {
+        encode_msg(msg,MK32CU_HARDWARE_ID,nullptr,0);
+        return msg;
+    }
+    const uint8_t *const SIYI_Message::mk32cu_acquire_system_settings(uint8_t *const msg) const {
+        encode_msg(msg,MK32CU_ACQUIRE_SYSTEM_SETTINGS,nullptr,0);
+        return msg;
+    }
+    
+    const uint8_t *const SIYI_Message::mk32cu_system_settings(uint8_t *const msg, uint8_t match, uint8_t baud_type, uint8_t joy_type) const {
+        uint8_t data[4];
+        data[0] = match;
+        data[1] = baud_type;
+        data[2] = joy_type;
+        data[3] = 0;
+        encode_msg(msg,MK32CU_SYSTEM_SETTINGS,data,4);
+        return msg;
+    }
+    
+    const uint8_t *const SIYI_Message::mk32cu_acquire_control_channel(uint8_t *const msg, uint8_t out_freq) const {
+        encode_msg(msg,MK32CU_ACQUIRE_REMOTE_CONTROL_CHANNELS,&out_freq,1);
+        return msg;
+    }
+    
+    const uint8_t *const SIYI_Message::mk32cu_acquire_rc_link_status(uint8_t *const msg) const {
+        encode_msg(msg,MK32CU_ACQUIRE_RC_LINK_STATUS,nullptr,0);
+        return msg;
+    }
+    
+    const uint8_t *const SIYI_Message::mk32cu_acquire_fpv_link_status(uint8_t *const msg) const {
+        encode_msg(msg,MK32CU_ACQUIRE_FPV_LINK_STATUS,nullptr,0);
+        return msg;
+    }
 } //namespace SIYI
 
