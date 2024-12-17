@@ -6,7 +6,7 @@
 namespace SIYI {
     class SIYIUnix_Remote : public SIYI_Remote {
     public:
-        SIYIUnix_Remote(const char *ip_address = "192.168.144.25", int port = 37260);
+        SIYIUnix_Remote(const char *ip_address = "192.168.144.12", int port = 19856);
         virtual ~SIYIUnix_Remote() override;
     private:
         virtual bool send_message(const uint8_t *message, const int length) const override;
