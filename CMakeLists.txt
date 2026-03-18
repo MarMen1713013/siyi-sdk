@@ -9,7 +9,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/bin)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/bin/lib)
 add_definitions(-DSOURCE_DIR="${CMAKE_SOURCE_DIR}")
 
-add_subdirectory(include/crc)
+add_subdirectory(subprojects/crc)
 
 add_library(
     siyi-sdk
