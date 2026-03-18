@@ -13,6 +13,9 @@ siyi_sdk_lib = library(
   sources: files(
     'src/message.cpp',
     'src/sdk.cpp',
+    'src/ai.cpp',
+    'src/gimbal.cpp',
+    'src/remote.cpp',
     ),
   include_directories: include_directories('include'),
   dependencies: [gencrc_dep],
