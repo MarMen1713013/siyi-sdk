@@ -138,7 +138,7 @@ namespace SIYI {
         static uint16_t s_table[256];
         static const int MINIMUM_DATA_LENGTH = 10;
     
-        static const uint16_t HEADER = 0x6655;
+        static inline const uint16_t HEADER = 0x6655;
         uint8_t m_ctrl = 0x01;
         uint16_t m_data_len;
         mutable uint16_t m_seq = 0;
